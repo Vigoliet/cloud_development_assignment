@@ -1,5 +1,6 @@
 package com.example.songify.controllers;
 
+import com.example.songify.XRayTimed;
 import com.example.songify.models.Song;
 import com.example.songify.repositories.SongRepository;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -14,12 +15,13 @@ public class SongController {
     @Autowired
     private SongRepository songRepository;
 
-
+    @XRayTimed
     @GetMapping("/songs")
     public List<Song> getAllSongs(){
         return (List<Song>) songRepository.findAll();
     }
 
+    @XRayTimed
     @PostMapping("/addSong")
     public Song addSong(@RequestBody Song song) {
         return songRepository.save(song);

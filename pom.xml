@@ -67,6 +67,13 @@
 			<version>3.3.2</version>
 		</dependency>
 
+		<!-- https://mvnrepository.com/artifact/com.amazonaws/aws-xray-recorder-sdk-aws-sdk-v2 -->
+		<dependency>
+			<groupId>com.amazonaws</groupId>
+			<artifactId>aws-xray-recorder-sdk-aws-sdk-v2</artifactId>
+			<version>2.18.1</version>
+		</dependency>
+
 	</dependencies>
 
 	<build>
