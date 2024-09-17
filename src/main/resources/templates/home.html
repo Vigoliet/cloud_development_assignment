@@ -1,64 +1,78 @@
+<!-- src/main/resources/templates/home.html -->
 <!DOCTYPE html>
-<html lang="en">
+<html lang="en" xmlns:sec="http://www.thymeleaf.org/extras/spring-security">
 <head>
     <meta charset="UTF-8">
     <title>Home Page</title>
     <link rel="stylesheet" href="/styles.css">
-    <script>
-        async function fetchSongs() {
-            const response = await fetch('/api/songs');
-            const songs = await response.json();
-            const songList = document.getElementById('songList');
-            songList.innerHTML = '';
-            songs.forEach(song => {
-                const li = document.createElement('li');
-                li.textContent = `${song.songName} by ${song.artist} (${song.songLength})`;
-                songList.appendChild(li);
-            });
-        }
-
-        async function addSong(event) {
-            event.preventDefault();
-            const songName = document.getElementById('songName').value;
-            const artist = document.getElementById('artist').value;
-            const songLength = document.getElementById('songLength').value;
-
-            const response = await fetch('/api/addSong', {
-                method: 'POST',
-                headers: {
-                    'Content-Type': 'application/json'
-                },
-                body: JSON.stringify({ songName, artist, songLength })
-            });
-
-            if (response.ok) {
-                fetchSongs();
-            }
-        }
-
-        document.addEventListener('DOMContentLoaded', () => {
-            fetchSongs();
-            document.querySelector('form').addEventListener('submit', addSong);
-        });
-    </script>
 </head>
 <body>
 
-<h1>Welcome to my home page</h1>
+<div>
+    <h1 class="title">JMDB</h1>
+    <div sec:authorize="isAuthenticated()">
+        <div class="box">
+            Hello, <strong th:text="${#authentication.name}"></strong>!
+        </div>
+        <h2>Add a new song</h2>
+        <form>
+            <label for="songName">Song Name:</label>
+            <input type="text" id="songName" name="songName" required><br>
+            <label for="artist">Artist:</label>
+            <input type="text" id="artist" name="artist" required><br>
+            <label for="songLength">Song Length:</label>
+            <input type="text" id="songLength" name="songLength" required><br>
+            <button type="submit">Add Song</button>
+        </form>
 
-<h2>Add a new song</h2>
-<form>
-    <label for="songName">Song Name:</label>
-    <input type="text" id="songName" name="songName" required><br>
-    <label for="artist">Artist:</label>
-    <input type="text" id="artist" name="artist" required><br>
-    <label for="songLength">Song Length:</label>
-    <input type="text" id="songLength" name="songLength" required><br>
-    <button type="submit">Add Song</button>
-</form>
+        <h2>Song List</h2>
+        <ul id="songList"></ul>
 
-<h2>Song List</h2>
-<ul id="songList"></ul>
+        <script>
+            async function fetchSongs() {
+                const response = await fetch('/api/songs');
+                const songs = await response.json();
+                const songList = document.getElementById('songList');
+                songList.innerHTML = '';
+                songs.forEach(song => {
+                    const li = document.createElement('li');
+                    li.textContent = `${song.songName} by ${song.artist} (${song.songLength})`;
+                    songList.appendChild(li);
+                });
+            }
+
+            async function addSong(event) {
+                event.preventDefault();
+                const songName = document.getElementById('songName').value;
+                const artist = document.getElementById('artist').value;
+                const songLength = document.getElementById('songLength').value;
+
+                const response = await fetch('/api/addSong', {
+                    method: 'POST',
+                    headers: {
+                        'Content-Type': 'application/json'
+                    },
+                    body: JSON.stringify({ songName, artist, songLength })
+                });
+
+                if (response.ok) {
+                    fetchSongs();
+                }
+            }
+
+            document.addEventListener('DOMContentLoaded', () => {
+                fetchSongs();
+                document.querySelector('form').addEventListener('submit', addSong);
+            });
+        </script>
+    </div>
+    <div sec:authorize="isAnonymous()">
+        <div class="box">
+            <a class="button login is-primary" th:href="@{/oauth2/authorization/cognito}">
+                Log in with Amazon Cognito</a>
+        </div>
+    </div>
+</div>
 
 </body>
 </html>
