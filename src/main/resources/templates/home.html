@@ -9,13 +9,17 @@
 <body>
 
 <div>
-    <h1 class="title">JMDB</h1>
+    <h1 class="title">Songify</h1>
     <div sec:authorize="isAuthenticated()">
         <div class="box">
             Hello, <strong th:text="${#authentication.name}"></strong>!
         </div>
+        <form action="/logout" method="post">
+            <input type="hidden" th:name="${_csrf.parameterName}" th:value="${_csrf.token}"/>
+            <button type="submit">Log out</button>
+        </form>
         <h2>Add a new song</h2>
-        <form>
+        <form action="/api/addSong" method="post">
             <label for="songName">Song Name:</label>
             <input type="text" id="songName" name="songName" required><br>
             <label for="artist">Artist:</label>
@@ -62,7 +66,7 @@
 
             document.addEventListener('DOMContentLoaded', () => {
                 fetchSongs();
-                document.querySelector('form').addEventListener('submit', addSong);
+                document.querySelector('form[action="/api/addSong"]').addEventListener('submit', addSong);
             });
         </script>
     </div>
