@@ -11,13 +11,6 @@ import java.util.Map;
 @SpringBootApplication
 public class SongifyApplication {
 
-	static {
-		Dotenv dotenv = Dotenv.load();
-		for (DotenvEntry entry : dotenv.entries()) {
-			System.setProperty(entry.getKey(), entry.getValue());
-		}
-	}
-
 	public static void main(String[] args) {
 		SpringApplication.run(SongifyApplication.class, args);
 	}
