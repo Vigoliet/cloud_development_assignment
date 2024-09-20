@@ -1,0 +1,24 @@
+spring:
+  application:
+    name: jmdb_cognito_demo
+  datasource:
+    username: ${DB_USERNAME}
+    password: ${DB_PASSWORD}
+    url: ${DB_URL}
+  jpa:
+    hibernate:
+      ddl-auto: update
+  security:
+    oauth2:
+      client:
+        registration:
+          cognito:
+            clientId: ${CLIENT_ID}
+            clientSecret: ${CLIENT_SECRET}
+            scope: openid
+            redirect-uri: ${REDIRECT_URI_BASE}/login/oauth2/code/cognito
+            clientName: jmdb-app-client
+        provider:
+          cognito:
+            issuerUri: https://cognito-idp.eu-north-1.amazonaws.com/eu-north-1_JgEHTPwiH
+            user-name-attribute: username
