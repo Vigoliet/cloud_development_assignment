@@ -29,6 +29,7 @@ public class CognitoLogoutSuccessHandler extends SimpleUrlLogoutSuccessHandler {
 
         var basePath = ServletUriComponentsBuilder.fromRequestUri(request)
                 .replacePath(null)
+                .scheme("https")  // Ensure HTTPS is used
                 .build()
                 .toUriString();
 
@@ -51,6 +52,4 @@ public class CognitoLogoutSuccessHandler extends SimpleUrlLogoutSuccessHandler {
         var registrationId = token.getAuthorizedClientRegistrationId();
         return clientRegistrationRepository.findByRegistrationId(registrationId);
     }
-
-
 }
