@@ -1,4 +1,4 @@
-package com.example.songify;
+package com.example.songify.xray;
 
 
 import com.amazonaws.xray.AWSXRay;
@@ -15,7 +15,7 @@ import org.aspectj.lang.reflect.MethodSignature;
 public class XRayTimingAspect {
     private static final AWSXRayRecorder xrayRecorder = AWSXRay.getGlobalRecorder();
 
-    @Around("@annotation(XRayTimed)")
+    @Around("@annotation(com.example.songify.xray.XRayTimed)")
     public Object timeXRaySegment(ProceedingJoinPoint joinPoint) throws Throwable {
         MethodSignature signature = (MethodSignature) joinPoint.getSignature();
         XRayTimed xRayTimed = signature.getMethod().getAnnotation(XRayTimed.class);

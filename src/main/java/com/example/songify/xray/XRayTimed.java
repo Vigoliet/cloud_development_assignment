@@ -1,4 +1,4 @@
-package com.example.songify;
+package com.example.songify.xray;
 
 import java.lang.annotation.ElementType;
 import java.lang.annotation.Retention;
