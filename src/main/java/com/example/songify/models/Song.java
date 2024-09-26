@@ -1,9 +1,10 @@
 package com.example.songify.models;
 
 import jakarta.persistence.*;
-import lombok.Getter;
+import lombok.Data;
 
-@Getter
+
+@Data
 @Entity
 @Table(name = "songs")
 public class Song {
