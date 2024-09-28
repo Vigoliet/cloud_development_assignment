@@ -1,8 +1,10 @@
 package com.example.songify.models;
 
-
+import com.fasterxml.jackson.annotation.JsonIgnoreProperties;
 import jakarta.persistence.*;
+import lombok.Data;
 
+@Data
 @Entity
 @Table(name = "songs")
 public class Song {
@@ -16,37 +18,11 @@ public class Song {
 
     private String songLength;
 
-    public Long getId() {
-        return id;
-    }
+    @ManyToOne
+    @JoinColumn(name = "album_id", referencedColumnName = "id")
+    @JsonIgnoreProperties("songs") // This is mandatory, so the json isn't recursive
+    private Album album;
 
-    public void setId(Long id) {
-        this.id = id;
-    }
-
-    public String getSongName() {
-        return songName;
-    }
-
-    public void setSongName(String songName) {
-        this.songName = songName;
-    }
-
-    public String getArtist() {
-        return artist;
-    }
-
-    public void setArtist(String artist) {
-        this.artist = artist;
-    }
-
-    public String getSongLength() {
-        return songLength;
-    }
-
-    public void setSongLength(String songLength) {
-        this.songLength = songLength;
-    }
 
     @Override
     public String toString() {
@@ -55,6 +31,7 @@ public class Song {
                 ", songName='" + songName + '\'' +
                 ", artist='" + artist + '\'' +
                 ", songLength='" + songLength + '\'' +
+                ", album=" + album +
                 '}';
     }
 }

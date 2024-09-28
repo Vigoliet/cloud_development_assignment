@@ -1,4 +1,3 @@
-<!-- src/main/resources/templates/home.html -->
 <!DOCTYPE html>
 <html lang="en" xmlns:sec="http://www.thymeleaf.org/extras/spring-security">
 <head>
@@ -19,13 +18,15 @@
             <button type="submit">Log out</button>
         </form>
         <h2>Add a new song</h2>
-        <form action="/api/addSong" method="post">
+        <form id="songForm">
             <label for="songName">Song Name:</label>
             <input type="text" id="songName" name="songName" required><br>
             <label for="artist">Artist:</label>
             <input type="text" id="artist" name="artist" required><br>
             <label for="songLength">Song Length:</label>
             <input type="text" id="songLength" name="songLength" required><br>
+            <label for="album">Album:</label>
+            <select id="album" name="albumId" required></select><br>
             <button type="submit">Add Song</button>
         </form>
 
@@ -33,6 +34,18 @@
         <ul id="songList"></ul>
 
         <script>
+            async function fetchAlbums() {
+                const response = await fetch('/api/albums');
+                const albums = await response.json();
+                const albumSelect = document.getElementById('album');
+                albums.forEach(album => {
+                    const option = document.createElement('option');
+                    option.value = album.id;
+                    option.textContent = album.name;
+                    albumSelect.appendChild(option);
+                });
+            }
+
             async function fetchSongs() {
                 const response = await fetch('/api/songs');
                 const songs = await response.json();
@@ -40,33 +53,41 @@
                 songList.innerHTML = '';
                 songs.forEach(song => {
                     const li = document.createElement('li');
-                    li.textContent = `${song.songName} by ${song.artist} (${song.songLength})`;
+                    li.textContent = `${song.songName} by ${song.artist} (${song.songLength}) from album ${song.album.name}`;
                     songList.appendChild(li);
                 });
             }
 
             async function addSong(event) {
                 event.preventDefault();
-                const songName = document.getElementById('songName').value;
-                const artist = document.getElementById('artist').value;
-                const songLength = document.getElementById('songLength').value;
+                const formData = new FormData(event.target);
+                const data = Object.fromEntries(formData.entries());
+
+                // Ensure albumId is included in the request payload
+                data.album = { id: data.albumId };
+                delete data.albumId;
 
                 const response = await fetch('/api/addSong', {
                     method: 'POST',
                     headers: {
                         'Content-Type': 'application/json'
                     },
-                    body: JSON.stringify({ songName, artist, songLength })
+                    body: JSON.stringify(data)
                 });
 
                 if (response.ok) {
-                    fetchSongs();
+                    alert('Song added successfully!');
+                    event.target.reset();
+                    await fetchSongs();
+                } else {
+                    alert('Failed to add song.');
                 }
             }
 
             document.addEventListener('DOMContentLoaded', () => {
+                document.getElementById('songForm').addEventListener('submit', addSong);
+                fetchAlbums();
                 fetchSongs();
-                document.querySelector('form[action="/api/addSong"]').addEventListener('submit', addSong);
             });
         </script>
     </div>
